@@ -131,15 +131,9 @@ class VideoWindow(QMainWindow):
     @pyqtSlot()
     def createMark(self, label):
         if self.mediaPlayer.state() == QMediaPlayer.PlayingState:
-            # TODO: it should be inside labelEditor
-            t = self.editorWidget.tableWidget
+            self.editorWidget.new_mark(self.mediaPlayer.position()/1000,
+                    label, self.labels_state[label])
             self.labels_state[label] = not self.labels_state[label]
-            index = t.rowCount()-1
-            t.setItem(index, 0, QTableWidgetItem(
-                str(self.mediaPlayer.position()/1000)))
-            t.setItem(index, 1, QTableWidgetItem(label))
-            t.setItem(index, 2, QTableWidgetItem('start'))
-            t.insertRow(index+1)
 
 
 if __name__ == '__main__':
