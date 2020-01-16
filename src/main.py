@@ -13,6 +13,7 @@ from label_editor import LabelEditorWidget
 from signals import SignalBus
 
 import sys
+import csv
 from functools import partial
 
 
@@ -28,6 +29,9 @@ class VideoWindow(QMainWindow):
 
     def initUI(self):
         videoWidget = self.create_player()
+        self.errorLabel = QLabel()
+        self.errorLabel.setSizePolicy(QSizePolicy.Preferred,
+                QSizePolicy.Maximum)
         self.create_menu_bar()
         wid = QWidget(self)
         self.setCentralWidget(wid)
@@ -39,7 +43,6 @@ class VideoWindow(QMainWindow):
         self.mediaPlayer.error.connect(self.handleError)
 
     def create_player(self):
-
         self.mediaPlayer = QMediaPlayer(None, QMediaPlayer.VideoSurface)
 
         videoWidget = QVideoWidget()
@@ -58,17 +61,17 @@ class VideoWindow(QMainWindow):
         return videoWidget
 
     def create_menu_bar(self):
-        self.errorLabel = QLabel()
-        self.errorLabel.setSizePolicy(QSizePolicy.Preferred,
-                QSizePolicy.Maximum)
         openAction = create_action('open.png', '&Open', 'Ctrl+O', 'Open video',
                 self.openFile, self)
+        csvAction = create_action('save.png', '&Export', 'Ctrl+S',
+                'Export to csv', self.exportCsv, self)
         exitAction = create_action('exit.png', '&Exit', 'Ctrl+Q', 'Exit',
                 self.exitCall, self)
 
         menuBar = self.menuBar()
         fileMenu = menuBar.addMenu('&File')
         fileMenu.addAction(openAction)
+        fileMenu.addAction(csvAction)
         fileMenu.addAction(exitAction)
 
     def set_layout(self, videoWidget, wid):
@@ -137,6 +140,13 @@ class VideoWindow(QMainWindow):
         bind.triggered.connect(partial(self.createMark, label))
         self.labels_state[label] = False
         self.addAction(bind)
+
+    def exportCsv(self):
+        with open('data.csv', mode='w') as csv_file:
+            writer = csv.writer(csv_file, delimiter=',', quotechar='"',
+                    quoting=csv.QUOTE_MINIMAL)
+            marks = self.editorWidget.get_marks()
+            writer.writerows(marks)
 
     @pyqtSlot()
     def createMark(self, label):
