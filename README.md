@@ -11,6 +11,7 @@ need to install the following packages:
 
 ``` bash
 $ sudo apt install ubuntu-restricted-extras
+$ sudo apt install build-essentials qt5-default
 ```
 
 ### Windows
