@@ -24,6 +24,21 @@ class VideoWindow(QMainWindow):
         self.labels_state = {}
         self.comm = SignalBus.instance()
         self.comm.newLabelSignal.connect(self.bindLabelEvent)
+        self.initUI()
+
+    def initUI(self):
+        videoWidget = self.create_player()
+        self.create_menu_bar()
+        wid = QWidget(self)
+        self.setCentralWidget(wid)
+        self.set_layout(videoWidget, wid)
+        self.mediaPlayer.setVideoOutput(videoWidget)
+        self.mediaPlayer.stateChanged.connect(self.mediaStateChanged)
+        self.mediaPlayer.positionChanged.connect(self.positionChanged)
+        self.mediaPlayer.durationChanged.connect(self.durationChanged)
+        self.mediaPlayer.error.connect(self.handleError)
+
+    def create_player(self):
 
         self.mediaPlayer = QMediaPlayer(None, QMediaPlayer.VideoSurface)
 
@@ -40,6 +55,9 @@ class VideoWindow(QMainWindow):
         self.positionSlider.setRange(0, 0)
         self.positionSlider.sliderMoved.connect(self.setPosition)
 
+        return videoWidget
+
+    def create_menu_bar(self):
         self.errorLabel = QLabel()
         self.errorLabel.setSizePolicy(QSizePolicy.Preferred,
                 QSizePolicy.Maximum)
@@ -53,9 +71,7 @@ class VideoWindow(QMainWindow):
         fileMenu.addAction(openAction)
         fileMenu.addAction(exitAction)
 
-        wid = QWidget(self)
-        self.setCentralWidget(wid)
-
+    def set_layout(self, videoWidget, wid):
         controlLayout = QHBoxLayout()
         controlLayout.setContentsMargins(0, 0, 0, 0)
         controlLayout.addWidget(self.playButton)
@@ -75,12 +91,6 @@ class VideoWindow(QMainWindow):
         layout.addLayout(labellingLayout)
 
         wid.setLayout(layout)
-
-        self.mediaPlayer.setVideoOutput(videoWidget)
-        self.mediaPlayer.stateChanged.connect(self.mediaStateChanged)
-        self.mediaPlayer.positionChanged.connect(self.positionChanged)
-        self.mediaPlayer.durationChanged.connect(self.durationChanged)
-        self.mediaPlayer.error.connect(self.handleError)
 
     def openFile(self):
         fileName, _ = QFileDialog.getOpenFileName(self, "Open video",
