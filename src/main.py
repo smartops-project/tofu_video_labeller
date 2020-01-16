@@ -130,7 +130,9 @@ class VideoWindow(QMainWindow):
 
     @pyqtSlot()
     def createMark(self, label):
-        if self.mediaPlayer.state() == QMediaPlayer.PlayingState:
+        state = self.mediaPlayer.state()
+        if state == QMediaPlayer.PlayingState or state == \
+                QMediaPlayer.PausedState:
             self.editorWidget.new_mark(self.mediaPlayer.position()/1000,
                     label, self.labels_state[label])
             self.labels_state[label] = not self.labels_state[label]
