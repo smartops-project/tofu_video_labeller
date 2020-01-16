@@ -47,8 +47,9 @@ class LabelEditorWidget(QWidget):
             start_or_stop = 2
             matches = self.tableWidget.findItems(label, Qt.MatchExactly)
             index = matches[-1].row()
-        self.tableWidget.setItem(index, start_or_stop,
-                QTableWidgetItem(str(time)))
+        timeItem = QTableWidgetItem(str(time))
+        self.tableWidget.setItem(index, start_or_stop, timeItem)
+        self.tableWidget.scrollToItem(timeItem)
         self.set_row_color(index, mode)
 
     def set_row_color(self, index, mode):

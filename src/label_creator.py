@@ -53,8 +53,9 @@ class LabelCreatorWidget(QWidget):
             self.tableWidget.setItem(index, 0, QTableWidgetItem(
                 newLabelDialog.lid.text()))
             self.tableWidget.setItem(index, 1, QTableWidgetItem(label))
-            self.tableWidget.setItem(index, 2, QTableWidgetItem(
-                keySeq.toString()))
+            keyItem = QTableWidgetItem(keySeq.toString())
+            self.tableWidget.setItem(index, 2, keyItem)
+            self.tableWidget.scrollToItem(keyItem)
             self.comm.newLabelSignal.emit(keySeq, label)
             self.tableWidget.insertRow(index+1)
 
