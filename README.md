@@ -1,4 +1,6 @@
-# SmartOps Video Labelling Tool
+# Tofu - SmartOps Video Labelling Tool
+
+Video clip labeller...
 
 ## Installation
 
@@ -14,4 +16,8 @@ $ sudo apt install ubuntu-restricted-extras
 ### Windows
 
 > TODO
+
+## Usage
+
+...
 
