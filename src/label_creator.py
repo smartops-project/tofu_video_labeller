@@ -58,6 +58,7 @@ class LabelCreatorWidget(QWidget):
             self.tableWidget.scrollToItem(keyItem)
             self.comm.newLabelSignal.emit(keySeq, label)
             self.tableWidget.insertRow(index+1)
+            self.tableWidget.resizeColumnsToContents()
 
 
 class NewLabelDialog(QDialog):
