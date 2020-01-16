@@ -5,7 +5,7 @@ the context of Deep Learning applications. So far, it export
 the labelled slices to a *csv* file.
 
 <p align="center">
-  ![](doc/static/img/tofu.png)
+  <img src="doc/static/img/tofu.png">
 </p>
 
 ## Installation
