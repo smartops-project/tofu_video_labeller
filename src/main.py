@@ -142,11 +142,15 @@ class VideoWindow(QMainWindow):
         self.addAction(bind)
 
     def exportCsv(self):
-        with open('data.csv', mode='w') as csv_file:
-            writer = csv.writer(csv_file, delimiter=',', quotechar='"',
-                    quoting=csv.QUOTE_MINIMAL)
-            marks = self.editorWidget.get_marks()
-            writer.writerows(marks)
+        fileUrl, _ = QFileDialog.getSaveFileUrl(self, QDir.homePath())
+        fileName = fileUrl.toLocalFile()
+
+        if fileName != '':
+            with open(fileName, mode='w') as csv_file:
+                writer = csv.writer(csv_file, delimiter=',', quotechar='"',
+                        quoting=csv.QUOTE_MINIMAL)
+                marks = self.editorWidget.get_marks()
+                writer.writerows(marks)
 
     @pyqtSlot()
     def createMark(self, label):
