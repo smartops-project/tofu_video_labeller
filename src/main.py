@@ -22,6 +22,7 @@ class VideoWindow(QMainWindow):
     def __init__(self, parent=None):
         super(VideoWindow, self).__init__(parent)
         self.setWindowTitle("Tofu Video Labeller")
+        self.setWindowIcon(QIcon('tofu.png'))
         self.labels_state = {}
         self.comm = SignalBus.instance()
         self.comm.newLabelSignal.connect(self.bindLabelEvent)
