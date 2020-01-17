@@ -1,10 +1,12 @@
 # Tofu - SmartOps Video Labelling Tool
 
-![](doc/static/img/tofu.png)
-
 This is a minimalist tool for labelling video clips, e.g. activities, in
 the context of Deep Learning applications. So far, it exports
 the labelled slices to a *csv* file.
+
+<p align="center">
+  <img src="doc/static/img/tofu.png">
+</p>
 
 
 ## Installation
