@@ -10,6 +10,7 @@ from PyQt5.QtWidgets import (QApplication, QFileDialog, QHBoxLayout, QLabel,
 from utils import create_action
 from label_creator import LabelCreatorWidget
 from label_editor import LabelEditorWidget
+from label_slider import LabelSliderWidget
 from signals import SignalBus
 
 import sys
@@ -23,7 +24,6 @@ class VideoWindow(QMainWindow):
         super(VideoWindow, self).__init__(parent)
         self.setWindowTitle("Tofu Video Labeller")
         self.setWindowIcon(QIcon('src/static/img/tofu.png'))
-        self.labels_state = {}
         self.comm = SignalBus.instance()
         self.comm.newLabelSignal.connect(self.bindLabelEvent)
         self.initUI()
@@ -49,17 +49,36 @@ class VideoWindow(QMainWindow):
         videoWidget = QVideoWidget()
         self.editorWidget = LabelEditorWidget()
         self.creatorWidget = LabelCreatorWidget()
+        self.create_control()
 
-        self.playButton = QPushButton()
-        self.playButton.setEnabled(False)
-        self.playButton.setIcon(self.style().standardIcon(QStyle.SP_MediaPlay))
         self.playButton.clicked.connect(self.play)
-
-        self.positionSlider = QSlider(Qt.Horizontal)
-        self.positionSlider.setRange(0, 0)
+        self.goBackButton.clicked.connect(self.slow)
+        self.slowDownButton.clicked.connect(self.speed)
+        self.speedUpButton.clicked.connect(self.advance)
+        self.advanceButton.clicked.connect(self.back)
         self.positionSlider.sliderMoved.connect(self.setPosition)
 
         return videoWidget
+
+    def create_control(self):
+        self.playButton = QPushButton()
+        self.playButton.setEnabled(False)
+        self.playButton.setIcon(self.style().standardIcon(QStyle.SP_MediaPlay))
+
+        # TODO: begin
+        self.advanceButton = QPushButton()
+        self.speedUpButton = QPushButton()
+        self.goBackButton = QPushButton()
+        self.slowDownButton = QPushButton()
+        self.advanceButton.setEnabled(False)
+        self.speedUpButton.setEnabled(False)
+        self.goBackButton.setEnabled(False)
+        self.slowDownButton.setEnabled(False)
+        self.labelSlider = LabelSliderWidget()
+        # TODO: end
+
+        self.positionSlider = QSlider(Qt.Horizontal)
+        self.positionSlider.setRange(0, 0)
 
     def create_menu_bar(self):
         openAction = create_action('open.png', '&Open', 'Ctrl+O', 'Open video',
@@ -76,14 +95,11 @@ class VideoWindow(QMainWindow):
         fileMenu.addAction(exitAction)
 
     def set_layout(self, videoWidget, wid):
-        controlLayout = QHBoxLayout()
-        controlLayout.setContentsMargins(0, 0, 0, 0)
-        controlLayout.addWidget(self.playButton)
-        controlLayout.addWidget(self.positionSlider)
-
         labellingLayout = QVBoxLayout()
         labellingLayout.addWidget(self.creatorWidget)
         labellingLayout.addWidget(self.editorWidget)
+
+        controlLayout = self.make_control_layout()
 
         videoAreaLayout = QVBoxLayout()
         videoAreaLayout.addWidget(videoWidget)
@@ -95,6 +111,23 @@ class VideoWindow(QMainWindow):
         layout.addLayout(labellingLayout)
 
         wid.setLayout(layout)
+
+    def make_control_layout(self):
+        buttonsLayout = QHBoxLayout()
+        buttonsLayout.setContentsMargins(0, 0, 0, 0)
+        # TODO: time
+        buttonsLayout.addWidget(self.slowDownButton)
+        buttonsLayout.addWidget(self.goBackButton)
+        buttonsLayout.addWidget(self.playButton)
+        buttonsLayout.addWidget(self.advanceButton)
+        buttonsLayout.addWidget(self.speedUpButton)
+        # TODO: speed
+        layout = QVBoxLayout()
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.addWidget(self.positionSlider)
+        layout.addWidget(self.labelSlider)
+        layout.addLayout(buttonsLayout)
+        return layout
 
     def openFile(self):
         fileName, _ = QFileDialog.getOpenFileName(self, "Open video",
@@ -113,6 +146,18 @@ class VideoWindow(QMainWindow):
             self.mediaPlayer.pause()
         else:
             self.mediaPlayer.play()
+
+    def slow(self):
+        pass
+
+    def speed(self):
+        pass
+
+    def advance(self):
+        pass
+
+    def back(self):
+        pass
 
     def mediaStateChanged(self, state):
         if self.mediaPlayer.state() == QMediaPlayer.PlayingState:
@@ -139,7 +184,6 @@ class VideoWindow(QMainWindow):
         bind = QAction(label, self)
         bind.setShortcut(keySeq)
         bind.triggered.connect(partial(self.createMark, label))
-        self.labels_state[label] = False
         self.addAction(bind)
 
     def exportCsv(self):
@@ -158,9 +202,7 @@ class VideoWindow(QMainWindow):
         state = self.mediaPlayer.state()
         if state == QMediaPlayer.PlayingState or state == \
                 QMediaPlayer.PausedState:
-            self.editorWidget.new_mark(self.mediaPlayer.position()/1000,
-                    label, self.labels_state[label])
-            self.labels_state[label] = not self.labels_state[label]
+            self.editorWidget.new_mark(self.mediaPlayer.position()/1000, label)
 
 
 if __name__ == '__main__':

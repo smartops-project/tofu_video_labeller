@@ -14,6 +14,8 @@ class LabelEditorWidget(QWidget):
         self.title = 'Label Editor'
         self.default_color = None
         self.initUI()
+        self.labels_state = {}
+
 
     def initUI(self):
         self.setWindowTitle(self.title)
@@ -31,7 +33,8 @@ class LabelEditorWidget(QWidget):
         self.tableWidget.setHorizontalHeaderLabels(['label', 'begin', 'end'])
         self.tableWidget.resizeColumnsToContents()
 
-    def new_mark(self, time, label, mode):
+    def new_mark(self, time, label):
+        mode = self.__toggle_label_mode(label)
         if not mode:
             start_or_stop = 1
             index = self.tableWidget.rowCount()-1
@@ -63,6 +66,13 @@ class LabelEditorWidget(QWidget):
         marks = [[t.item(i,j).text() for j in range(t.columnCount())] \
                 for i in range(t.rowCount()-1)]
         return marks
+
+    def __toggle_label_mode(self, label):
+        if label not in self.labels_state:
+            self.labels_state[label] = False
+        mode = self.labels_state[label]
+        self.labels_state[label] = not self.labels_state[label]
+        return mode
 
     def __row_colors(self, i, color):
         for ii in range(self.tableWidget.columnCount()):

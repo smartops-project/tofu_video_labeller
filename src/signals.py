@@ -5,6 +5,7 @@ from PyQt5.QtGui import QKeySequence
 class SignalBus(QObject):
     __instance = None
     newLabelSignal = pyqtSignal(QKeySequence, str)
+    uptLabelSlicer = pyqtSignal(int, str)
 
     @staticmethod
     def instance():
