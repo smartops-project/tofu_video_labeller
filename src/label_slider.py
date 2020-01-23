@@ -98,10 +98,4 @@ class Example(QWidget):
         self.c.updateBW.emit(value)
         self.wid.repaint()
 
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    ex = Example()
-    ex.show()
-    sys.exit(app.exec_())
-
 
