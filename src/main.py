@@ -26,6 +26,7 @@ class VideoWindow(QMainWindow):
         self.setWindowIcon(QIcon('src/static/img/tofu.png'))
         self.comm = SignalBus.instance()
         self.comm.newLabelSignal.connect(self.bindLabelEvent)
+        self.rate = 1
         self.initUI()
 
     def initUI(self):
@@ -81,8 +82,8 @@ class VideoWindow(QMainWindow):
         self.goBackButton.setText('-10s')
         self.goBackButton.setEnabled(False)
 
-        self.timeBox = QLabel()
-        self.rateBox = QLabel()
+        self.timeBox = QLabel('0s', self)
+        self.rateBox = QLabel(str(self.rate)+'x', self)
 
         self.labelSlider = LabelSliderWidget()
 
@@ -125,11 +126,13 @@ class VideoWindow(QMainWindow):
         buttonsLayout = QHBoxLayout()
         buttonsLayout.setContentsMargins(0, 0, 0, 0)
 
+        buttonsLayout.addWidget(self.timeBox)
         buttonsLayout.addWidget(self.slowDownButton)
         buttonsLayout.addWidget(self.goBackButton)
         buttonsLayout.addWidget(self.playButton)
         buttonsLayout.addWidget(self.advanceButton)
         buttonsLayout.addWidget(self.speedUpButton)
+        buttonsLayout.addWidget(self.rateBox)
 
         layout = QVBoxLayout()
         layout.setContentsMargins(0, 0, 0, 0)
@@ -173,6 +176,7 @@ class VideoWindow(QMainWindow):
             # TODO: Workaround pt 2
             self.mediaPlayer.setPosition(currentPos)
             # TODO: Workaround pt 2: end
+            self.rateBox.setText(str(self.rate)+'x')
 
     def speed(self):
         if self.mediaPlayer.state() == QMediaPlayer.PlayingState:
@@ -186,16 +190,17 @@ class VideoWindow(QMainWindow):
             # TODO: Workaround pt 2
             self.mediaPlayer.setPosition(currentPos)
             # TODO: Workaround pt 2: end
+            self.rateBox.setText(str(self.rate)+'x')
 
     def advance(self):
         currentPos = self.mediaPlayer.position()
         nextPos  = currentPos + 10*1000
-        self.mediaPlayer.setPosition(nextPos)
+        self.setPosition(nextPos)
 
     def back(self):
         currentPos = self.mediaPlayer.position()
         nextPos  = max(currentPos - 10*1000, 0)
-        self.mediaPlayer.setPosition(nextPos)
+        self.setPosition(nextPos)
 
     def mediaStateChanged(self, state):
         if self.mediaPlayer.state() == QMediaPlayer.PlayingState:
@@ -207,6 +212,7 @@ class VideoWindow(QMainWindow):
 
     def positionChanged(self, position):
         self.positionSlider.setValue(position)
+        self.timeBox.setText(str(int(position/1000))+'s')
 
     def durationChanged(self, duration):
         self.positionSlider.setRange(0, duration)
