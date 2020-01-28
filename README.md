@@ -49,6 +49,13 @@ $ cd <project_dir>
 $ ./tofu
 ```
 
+### Default shortcuts
+
+* Space: Play/Pause
+* Arrow Up/Down: speed up/slow down video
+* Arrow Right/Left: jump 10 seconds forwads/backwards
+
+
 ### Opening videos
 
 Open a video on **File** menu.

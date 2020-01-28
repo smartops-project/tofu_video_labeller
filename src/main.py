@@ -1,7 +1,7 @@
 from PyQt5.QtCore import QDir, Qt, QUrl, pyqtSlot, pyqtSignal
 from PyQt5.QtMultimedia import QMediaContent, QMediaPlayer
 from PyQt5.QtMultimediaWidgets import QVideoWidget
-from PyQt5.QtGui import QIcon
+from PyQt5.QtGui import QIcon, QKeySequence
 from PyQt5.QtWidgets import (QApplication, QFileDialog, QHBoxLayout, QLabel,
         QPushButton, QSizePolicy, QSlider, QStyle, QVBoxLayout, QWidget,
         QTableWidget, QTableWidgetItem, QMainWindow, QAction,
@@ -28,6 +28,7 @@ class VideoWindow(QMainWindow):
         self.comm.newLabelSignal.connect(self.bindLabelEvent)
         self.rate = 1
         self.initUI()
+        self.set_default_shortcuts()
 
     def initUI(self):
         videoWidget = self.create_player()
@@ -60,6 +61,13 @@ class VideoWindow(QMainWindow):
         self.positionSlider.sliderMoved.connect(self.setPosition)
 
         return videoWidget
+
+    def set_default_shortcuts(self):
+        self.playButton.setShortcut(QKeySequence(Qt.Key_Space))
+        self.speedUpButton.setShortcut(QKeySequence(Qt.Key_Up))
+        self.slowDownButton.setShortcut(QKeySequence(Qt.Key_Down))
+        self.advanceButton.setShortcut(QKeySequence(Qt.Key_Right))
+        self.goBackButton.setShortcut(QKeySequence(Qt.Key_Left))
 
     def create_control(self):
         self.playButton = QPushButton()
