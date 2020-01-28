@@ -23,8 +23,7 @@ class LabelCreatorWidget(QWidget):
 
         self.addLabelButton = QPushButton()
         self.addLabelButton.setEnabled(True)
-        self.addLabelButton.setIcon(
-                self.style().standardIcon(QStyle.SP_ArrowForward))
+        self.addLabelButton.setText('add label')
         self.addLabelButton.clicked.connect(self.addLabel)
 
         self.layout = QVBoxLayout()
