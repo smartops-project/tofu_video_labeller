@@ -7,7 +7,7 @@ from PyQt5.QtWidgets import (QApplication, QFileDialog, QHBoxLayout, QLabel,
         QTableWidget, QTableWidgetItem, QMainWindow, QAction,
         QAbstractScrollArea, QShortcut)
 
-from utils import create_action
+from utils import create_action, format_time
 from label_creator import LabelCreatorWidget
 from label_editor import LabelEditorWidget
 from label_slider import LabelSliderWidget
@@ -90,7 +90,7 @@ class VideoWindow(QMainWindow):
         self.goBackButton.setText('-10s')
         self.goBackButton.setEnabled(False)
 
-        self.timeBox = QLabel('0s', self)
+        self.timeBox = QLabel(format_time(0), self)
         self.rateBox = QLabel(str(self.rate)+'x', self)
 
         self.labelSlider = LabelSliderWidget()
@@ -220,7 +220,7 @@ class VideoWindow(QMainWindow):
 
     def positionChanged(self, position):
         self.positionSlider.setValue(position)
-        self.timeBox.setText(str(int(position/1000))+'s')
+        self.timeBox.setText(format_time(int(position/1000)))
 
     def durationChanged(self, duration):
         self.positionSlider.setRange(0, duration)
