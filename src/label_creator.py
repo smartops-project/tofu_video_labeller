@@ -21,25 +21,29 @@ class LabelCreatorWidget(QWidget):
 
         self.createTable()
 
-        self.addLabelButton = QPushButton()
-        self.addLabelButton.setEnabled(True)
-        self.addLabelButton.setText('add label')
-        self.addLabelButton.clicked.connect(self.addLabel)
-
         self.layout = QVBoxLayout()
         self.layout.addWidget(self.tableWidget)
-        self.layout.addWidget(self.addLabelButton)
         self.setLayout(self.layout)
         self.show()
+
+    @pyqtSlot()
+    def deleteRow(self):
+        button = self.sender()
+        if button:
+            row = self.tableWidget.indexAt(button.pos()).row()
+            self.tableWidget.removeRow(row)
 
     def createTable(self):
         self.tableWidget = QTableWidget()
         self.tableWidget.setRowCount(1)
-        self.tableWidget.setColumnCount(3)
+        self.tableWidget.setColumnCount(4)
         self.tableWidget.setSizeAdjustPolicy(
                 QAbstractScrollArea.AdjustToContents)
         self.tableWidget.verticalHeader().hide()
-        self.tableWidget.setHorizontalHeaderLabels(['id', 'label', 'shortcut'])
+        self.tableWidget.setHorizontalHeaderLabels(['id', 'label',
+            'shortcut', 'action'])
+        newButton = self._create_newButton()
+        self.tableWidget.setCellWidget(0, 3, newButton)
         self.tableWidget.resizeColumnsToContents()
         self.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
@@ -55,10 +59,22 @@ class LabelCreatorWidget(QWidget):
             self.tableWidget.setItem(index, 1, QTableWidgetItem(label))
             keyItem = QTableWidgetItem(keySeq.toString())
             self.tableWidget.setItem(index, 2, keyItem)
+            delButton = QPushButton()
+            delButton.setIcon(QIcon.fromTheme('user-trash'))
+            delButton.clicked.connect(self.deleteRow)
+            self.tableWidget.setCellWidget(index, 3, delButton)
             self.tableWidget.scrollToItem(keyItem)
             self.comm.newLabelSignal.emit(keySeq, label)
             self.tableWidget.insertRow(index+1)
+            newButton = self._create_newButton()
+            self.tableWidget.setCellWidget(index+1, 3, newButton)
             self.tableWidget.resizeColumnsToContents()
+
+    def _create_newButton(self):
+        newButton = QPushButton()
+        newButton.setIcon(QIcon.fromTheme('appointment-new'))
+        newButton.clicked.connect(self.addLabel)
+        return newButton
 
 
 class NewLabelDialog(QDialog):
