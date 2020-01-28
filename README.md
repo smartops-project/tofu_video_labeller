@@ -18,7 +18,7 @@ to install the following packages:
 
 ``` bash
 $ sudo apt install ubuntu-restricted-extras
-$ sudo apt install build-essentials qt5-default
+$ sudo apt install build-essential qt5-default
 ```
 
 Then, install the required Python Libraries.
