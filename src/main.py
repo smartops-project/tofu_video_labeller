@@ -26,9 +26,11 @@ class VideoWindow(QMainWindow):
         self.setWindowIcon(QIcon('src/static/img/tofu.png'))
         self.comm = SignalBus.instance()
         self.comm.newLabelSignal.connect(self.bindLabelEvent)
+        self.comm.delLabelSignal.connect(self.unbindLabelEvent)
         self.rate = 1
         self.initUI()
         self.set_default_shortcuts()
+        self.shortcuts = {}
 
     def initUI(self):
         videoWidget = self.create_player()
@@ -240,7 +242,12 @@ class VideoWindow(QMainWindow):
         bind = QAction(label, self)
         bind.setShortcut(keySeq)
         bind.triggered.connect(partial(self.createMark, label))
+        self.shortcuts[keySeq.toString()] = bind
         self.addAction(bind)
+
+    def unbindLabelEvent(self, keySeqStr):
+        self.removeAction(self.shortcuts[keySeqStr])
+        del self.shortcuts[keySeqStr]
 
     def exportCsv(self):
         fileUrl, _ = QFileDialog.getSaveFileUrl(self, QDir.homePath())

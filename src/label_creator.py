@@ -31,6 +31,8 @@ class LabelCreatorWidget(QWidget):
         button = self.sender()
         if button:
             row = self.tableWidget.indexAt(button.pos()).row()
+            keySeqStr = self.tableWidget.item(row, 2).text()
+            self.comm.delLabelSignal.emit(keySeqStr)
             self.tableWidget.removeRow(row)
 
     def createTable(self):
