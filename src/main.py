@@ -93,7 +93,9 @@ class VideoWindow(QMainWindow):
         self.goBackButton.setEnabled(False)
 
         self.timeBox = QLabel(format_time(0), self)
+        self.timeBox.setAlignment(Qt.AlignCenter)
         self.rateBox = QLabel(str(self.rate)+'x', self)
+        self.rateBox.setAlignment(Qt.AlignCenter)
 
         self.labelSlider = LabelSliderWidget()
 
