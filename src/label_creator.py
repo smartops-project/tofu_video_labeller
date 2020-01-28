@@ -43,7 +43,7 @@ class LabelCreatorWidget(QWidget):
                 QAbstractScrollArea.AdjustToContents)
         self.tableWidget.verticalHeader().hide()
         self.tableWidget.setHorizontalHeaderLabels(['id', 'label',
-            'shortcut', 'action'])
+            'shortcut', ''])
         newButton = self._create_newButton()
         self.tableWidget.setCellWidget(0, 3, newButton)
         self.tableWidget.resizeColumnsToContents()

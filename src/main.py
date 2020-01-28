@@ -14,6 +14,7 @@ from label_slider import LabelSliderWidget
 from signals import SignalBus
 
 import sys
+import os
 import csv
 from functools import partial
 
@@ -22,7 +23,7 @@ class VideoWindow(QMainWindow):
 
     def __init__(self, parent=None):
         super(VideoWindow, self).__init__(parent)
-        self.setWindowTitle("Tofu Video Labeller")
+        self.setWindowTitle("tofu")
         self.setWindowIcon(QIcon('src/static/img/tofu.png'))
         self.comm = SignalBus.instance()
         self.comm.newLabelSignal.connect(self.bindLabelEvent)
@@ -160,6 +161,7 @@ class VideoWindow(QMainWindow):
         if fileName != '':
             self.mediaPlayer.setMedia(
                     QMediaContent(QUrl.fromLocalFile(fileName)))
+            self.setWindowTitle("tofu - " + os.path.basename(fileName))
             self.playButton.setEnabled(True)
             self.speedUpButton.setEnabled(True)
             self.slowDownButton.setEnabled(True)
