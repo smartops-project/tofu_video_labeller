@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import (QLabel, QDialog, QFormLayout, QGroupBox,
         QPushButton, QSizePolicy, QStyle, QVBoxLayout, QWidget, QLineEdit,
         QTableWidget, QTableWidgetItem, QAction, QAbstractScrollArea, QFrame,
-        QDialogButtonBox, QKeySequenceEdit)
+        QDialogButtonBox, QKeySequenceEdit, QAbstractItemView)
 from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtGui import QIcon, QIntValidator
 
@@ -41,6 +41,7 @@ class LabelCreatorWidget(QWidget):
         self.tableWidget.verticalHeader().hide()
         self.tableWidget.setHorizontalHeaderLabels(['id', 'label', 'shortcut'])
         self.tableWidget.resizeColumnsToContents()
+        self.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
     @pyqtSlot()
     def addLabel(self):
