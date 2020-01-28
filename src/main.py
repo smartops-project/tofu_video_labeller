@@ -161,7 +161,8 @@ class VideoWindow(QMainWindow):
         if fileName != '':
             self.mediaPlayer.setMedia(
                     QMediaContent(QUrl.fromLocalFile(fileName)))
-            self.setWindowTitle("tofu - " + os.path.basename(fileName))
+            self.openedFile = os.path.basename(fileName)
+            self.setWindowTitle("tofu - " + self.openedFile)
             self.playButton.setEnabled(True)
             self.speedUpButton.setEnabled(True)
             self.slowDownButton.setEnabled(True)
@@ -254,7 +255,9 @@ class VideoWindow(QMainWindow):
         del self.shortcuts[keySeqStr]
 
     def exportCsv(self):
-        fileUrl, _ = QFileDialog.getSaveFileUrl(self, QDir.homePath())
+        suggestedName = os.path.splitext(self.openedFile)[0] + '.csv'
+        fileUrl, _ = QFileDialog.getSaveFileUrl(self, QDir.homePath(),
+                QUrl.fromLocalFile(suggestedName))
         fileName = fileUrl.toLocalFile()
 
         if fileName != '':
