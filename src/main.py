@@ -52,10 +52,10 @@ class VideoWindow(QMainWindow):
         self.create_control()
 
         self.playButton.clicked.connect(self.play)
-        self.goBackButton.clicked.connect(self.slow)
-        self.slowDownButton.clicked.connect(self.speed)
-        self.speedUpButton.clicked.connect(self.advance)
-        self.advanceButton.clicked.connect(self.back)
+        self.speedUpButton.clicked.connect(self.speed)
+        self.slowDownButton.clicked.connect(self.slow)
+        self.advanceButton.clicked.connect(self.advance)
+        self.goBackButton.clicked.connect(self.back)
         self.positionSlider.sliderMoved.connect(self.setPosition)
 
         return videoWidget
@@ -65,17 +65,26 @@ class VideoWindow(QMainWindow):
         self.playButton.setEnabled(False)
         self.playButton.setIcon(self.style().standardIcon(QStyle.SP_MediaPlay))
 
-        # TODO: begin
-        self.advanceButton = QPushButton()
         self.speedUpButton = QPushButton()
-        self.goBackButton = QPushButton()
-        self.slowDownButton = QPushButton()
-        self.advanceButton.setEnabled(False)
+        self.speedUpButton.setText('speed up')
         self.speedUpButton.setEnabled(False)
-        self.goBackButton.setEnabled(False)
+
+        self.slowDownButton = QPushButton()
+        self.slowDownButton.setText('slow down')
         self.slowDownButton.setEnabled(False)
+
+        self.advanceButton = QPushButton()
+        self.advanceButton.setText('+10s')
+        self.advanceButton.setEnabled(False)
+
+        self.goBackButton = QPushButton()
+        self.goBackButton.setText('-10s')
+        self.goBackButton.setEnabled(False)
+
+        self.timeBox = QLabel()
+        self.rateBox = QLabel()
+
         self.labelSlider = LabelSliderWidget()
-        # TODO: end
 
         self.positionSlider = QSlider(Qt.Horizontal)
         self.positionSlider.setRange(0, 0)
@@ -115,13 +124,13 @@ class VideoWindow(QMainWindow):
     def make_control_layout(self):
         buttonsLayout = QHBoxLayout()
         buttonsLayout.setContentsMargins(0, 0, 0, 0)
-        # TODO: time
+
         buttonsLayout.addWidget(self.slowDownButton)
         buttonsLayout.addWidget(self.goBackButton)
         buttonsLayout.addWidget(self.playButton)
         buttonsLayout.addWidget(self.advanceButton)
         buttonsLayout.addWidget(self.speedUpButton)
-        # TODO: speed
+
         layout = QVBoxLayout()
         layout.setContentsMargins(0, 0, 0, 0)
         layout.addWidget(self.positionSlider)
@@ -137,6 +146,11 @@ class VideoWindow(QMainWindow):
             self.mediaPlayer.setMedia(
                     QMediaContent(QUrl.fromLocalFile(fileName)))
             self.playButton.setEnabled(True)
+            self.speedUpButton.setEnabled(True)
+            self.slowDownButton.setEnabled(True)
+            self.advanceButton.setEnabled(True)
+            self.goBackButton.setEnabled(True)
+            self.rate = 1
 
     def exitCall(self):
         sys.exit(app.exec_())
@@ -148,16 +162,40 @@ class VideoWindow(QMainWindow):
             self.mediaPlayer.play()
 
     def slow(self):
-        pass
+        if self.mediaPlayer.state() == QMediaPlayer.PlayingState:
+            self.rate -= 0.5
+            # TODO: Workaround pt 1
+            # https://forum.qt.io/topic/88490/change-playback-rate-at-...
+            # ...runtime-problem-with-position-qmediaplayer/8
+            currentPos = self.mediaPlayer.position()
+            # TODO: Workaround pt 1
+            self.mediaPlayer.setPlaybackRate(self.rate)
+            # TODO: Workaround pt 2
+            self.mediaPlayer.setPosition(currentPos)
+            # TODO: Workaround pt 2: end
 
     def speed(self):
-        pass
+        if self.mediaPlayer.state() == QMediaPlayer.PlayingState:
+            self.rate += 0.5
+            # TODO: Workaround pt 1
+            # https://forum.qt.io/topic/88490/change-playback-rate-at-...
+            # ...runtime-problem-with-position-qmediaplayer/8
+            currentPos = self.mediaPlayer.position()
+            # TODO: Workaround pt 1
+            self.mediaPlayer.setPlaybackRate(self.rate)
+            # TODO: Workaround pt 2
+            self.mediaPlayer.setPosition(currentPos)
+            # TODO: Workaround pt 2: end
 
     def advance(self):
-        pass
+        currentPos = self.mediaPlayer.position()
+        nextPos  = currentPos + 10*1000
+        self.mediaPlayer.setPosition(nextPos)
 
     def back(self):
-        pass
+        currentPos = self.mediaPlayer.position()
+        nextPos  = max(currentPos - 10*1000, 0)
+        self.mediaPlayer.setPosition(nextPos)
 
     def mediaStateChanged(self, state):
         if self.mediaPlayer.state() == QMediaPlayer.PlayingState:
@@ -178,6 +216,10 @@ class VideoWindow(QMainWindow):
 
     def handleError(self):
         self.playButton.setEnabled(False)
+        self.speedUpButton.setEnabled(False)
+        self.slowDownButton.setEnabled(False)
+        self.advanceButton.setEnabled(False)
+        self.goBackButton.setEnabled(False)
         self.errorLabel.setText("Error: " + self.mediaPlayer.errorString())
 
     def bindLabelEvent(self, keySeq, label):
