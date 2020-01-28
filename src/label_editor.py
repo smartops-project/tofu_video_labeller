@@ -27,10 +27,11 @@ class LabelEditorWidget(QWidget):
     def createTable(self):
         self.tableWidget = QTableWidget()
         self.tableWidget.setRowCount(1)
-        self.tableWidget.setColumnCount(3)
+        self.tableWidget.setColumnCount(4)
         self.tableWidget.setSizeAdjustPolicy(
                 QAbstractScrollArea.AdjustToContents)
-        self.tableWidget.setHorizontalHeaderLabels(['label', 'begin', 'end'])
+        self.tableWidget.setHorizontalHeaderLabels(['label', 'begin', 'end',
+            ''])
         self.tableWidget.resizeColumnsToContents()
 
     def new_mark(self, time, label):
@@ -50,9 +51,20 @@ class LabelEditorWidget(QWidget):
             index = matches[-1].row()
         timeItem = QTableWidgetItem(format_time(time))
         self.tableWidget.setItem(index, start_or_stop, timeItem)
+        delButton = QPushButton()
+        delButton.setIcon(QIcon.fromTheme('user-trash'))
+        delButton.clicked.connect(self.deleteRow)
+        self.tableWidget.setCellWidget(index, 3, delButton)
         self.tableWidget.scrollToItem(timeItem)
         self.tableWidget.resizeColumnsToContents()
         self.set_row_color(index, mode)
+
+    @pyqtSlot()
+    def deleteRow(self):
+        button = self.sender()
+        if button:
+            row = self.tableWidget.indexAt(button.pos()).row()
+            self.tableWidget.removeRow(row)
 
     def set_row_color(self, index, mode):
         t = self.tableWidget
@@ -75,7 +87,7 @@ class LabelEditorWidget(QWidget):
         return mode
 
     def __row_colors(self, i, color):
-        for ii in range(self.tableWidget.columnCount()):
+        for ii in range(self.tableWidget.columnCount()-1):
             self.tableWidget.item(i, ii).setBackground(color)
 
 
