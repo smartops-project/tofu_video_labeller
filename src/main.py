@@ -80,27 +80,33 @@ class VideoWindow(QMainWindow):
         self.playButton.setIcon(self.style().standardIcon(QStyle.SP_MediaPlay))
 
         self.speedUpButton = QPushButton()
-        self.speedUpButton.setText('speed up')
+        self.speedUpButton.setIcon(
+                self.style().standardIcon(QStyle.SP_MediaSeekForward))
         self.speedUpButton.setEnabled(False)
 
         self.slowDownButton = QPushButton()
-        self.slowDownButton.setText('slow down')
+        self.slowDownButton.setIcon(
+                self.style().standardIcon(QStyle.SP_MediaSeekBackward))
         self.slowDownButton.setEnabled(False)
 
         self.adv3Button = QPushButton()
-        self.adv3Button.setText('+3s')
+        self.adv3Button.setIcon(
+                self.style().standardIcon(QStyle.SP_ArrowRight))
         self.adv3Button.setEnabled(False)
 
         self.advanceButton = QPushButton()
-        self.advanceButton.setText('+10s')
+        self.advanceButton.setIcon(
+                self.style().standardIcon(QStyle.SP_MediaSkipForward))
         self.advanceButton.setEnabled(False)
 
         self.goBack3Button = QPushButton()
-        self.goBack3Button.setText('-3s')
+        self.goBack3Button.setIcon(
+                self.style().standardIcon(QStyle.SP_ArrowLeft))
         self.goBack3Button.setEnabled(False)
 
         self.goBackButton = QPushButton()
-        self.goBackButton.setText('-10s')
+        self.goBackButton.setIcon(
+                self.style().standardIcon(QStyle.SP_MediaSkipBackward))
         self.goBackButton.setEnabled(False)
 
         self.timeBox = QLabel(format_time(0), self)

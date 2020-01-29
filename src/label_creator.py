@@ -62,7 +62,7 @@ class LabelCreatorWidget(QWidget):
             keyItem = QTableWidgetItem(keySeq.toString())
             self.tableWidget.setItem(index, 2, keyItem)
             delButton = QPushButton()
-            delButton.setIcon(QIcon.fromTheme('user-trash'))
+            delButton.setIcon(self.style().standardIcon(QStyle.SP_TrashIcon))
             delButton.clicked.connect(self.deleteRow)
             self.tableWidget.setCellWidget(index, 3, delButton)
             self.tableWidget.scrollToItem(keyItem)
@@ -74,7 +74,8 @@ class LabelCreatorWidget(QWidget):
 
     def _create_newButton(self):
         newButton = QPushButton()
-        newButton.setIcon(QIcon.fromTheme('appointment-new'))
+        newButton.setIcon(self.style().standardIcon(
+            QStyle.SP_FileDialogNewFolder))
         newButton.clicked.connect(self.addLabel)
         return newButton
 

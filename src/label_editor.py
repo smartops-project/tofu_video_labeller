@@ -52,7 +52,7 @@ class LabelEditorWidget(QWidget):
         timeItem = QTableWidgetItem(format_time(time))
         self.tableWidget.setItem(index, start_or_stop, timeItem)
         delButton = QPushButton()
-        delButton.setIcon(QIcon.fromTheme('user-trash'))
+        delButton.setIcon(self.style().standardIcon(QStyle.SP_TrashIcon))
         delButton.clicked.connect(self.deleteRow)
         self.tableWidget.setCellWidget(index, 3, delButton)
         self.tableWidget.scrollToItem(timeItem)
