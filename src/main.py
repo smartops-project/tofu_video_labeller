@@ -59,8 +59,10 @@ class VideoWindow(QMainWindow):
         self.playButton.clicked.connect(self.play)
         self.speedUpButton.clicked.connect(self.speed)
         self.slowDownButton.clicked.connect(self.slow)
-        self.advanceButton.clicked.connect(self.advance)
-        self.goBackButton.clicked.connect(self.back)
+        self.adv3Button.clicked.connect(partial(self.advance, 3))
+        self.goBack3Button.clicked.connect(partial(self.back, 3))
+        self.advanceButton.clicked.connect(partial(self.advance, 10))
+        self.goBackButton.clicked.connect(partial(self.back, 10))
         self.positionSlider.sliderMoved.connect(self.setPosition)
 
         return videoWidget
@@ -85,9 +87,17 @@ class VideoWindow(QMainWindow):
         self.slowDownButton.setText('slow down')
         self.slowDownButton.setEnabled(False)
 
+        self.adv3Button = QPushButton()
+        self.adv3Button.setText('+3s')
+        self.adv3Button.setEnabled(False)
+
         self.advanceButton = QPushButton()
         self.advanceButton.setText('+10s')
         self.advanceButton.setEnabled(False)
+
+        self.goBack3Button = QPushButton()
+        self.goBack3Button.setText('-3s')
+        self.goBack3Button.setEnabled(False)
 
         self.goBackButton = QPushButton()
         self.goBackButton.setText('-10s')
@@ -142,7 +152,9 @@ class VideoWindow(QMainWindow):
         buttonsLayout.addWidget(self.timeBox)
         buttonsLayout.addWidget(self.slowDownButton)
         buttonsLayout.addWidget(self.goBackButton)
+        buttonsLayout.addWidget(self.goBack3Button)
         buttonsLayout.addWidget(self.playButton)
+        buttonsLayout.addWidget(self.adv3Button)
         buttonsLayout.addWidget(self.advanceButton)
         buttonsLayout.addWidget(self.speedUpButton)
         buttonsLayout.addWidget(self.rateBox)
@@ -167,7 +179,9 @@ class VideoWindow(QMainWindow):
             self.speedUpButton.setEnabled(True)
             self.slowDownButton.setEnabled(True)
             self.advanceButton.setEnabled(True)
+            self.adv3Button.setEnabled(True)
             self.goBackButton.setEnabled(True)
+            self.goBack3Button.setEnabled(True)
             self.rate = 1
 
     def exitCall(self):
@@ -207,14 +221,14 @@ class VideoWindow(QMainWindow):
             # TODO: Workaround pt 2: end
             self.rateBox.setText(str(self.rate)+'x')
 
-    def advance(self):
+    def advance(self, t=10):
         currentPos = self.mediaPlayer.position()
-        nextPos  = currentPos + 10*1000
+        nextPos  = currentPos + t*1000
         self.setPosition(nextPos)
 
-    def back(self):
+    def back(self, t=10):
         currentPos = self.mediaPlayer.position()
-        nextPos  = max(currentPos - 10*1000, 0)
+        nextPos  = max(currentPos - t*1000, 0)
         self.setPosition(nextPos)
 
     def mediaStateChanged(self, state):
