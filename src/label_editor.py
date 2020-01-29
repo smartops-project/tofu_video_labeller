@@ -75,7 +75,7 @@ class LabelEditorWidget(QWidget):
 
     def get_marks(self):
         t = self.tableWidget
-        marks = [[self.get_item_marks(i, j) for j in range(t.columnCount())] \
+        marks = [[self.get_item_marks(i, j) for j in range(t.columnCount()-1)]\
                 for i in range(t.rowCount()-1)]
         return marks
 
