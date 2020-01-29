@@ -75,9 +75,15 @@ class LabelEditorWidget(QWidget):
 
     def get_marks(self):
         t = self.tableWidget
-        marks = [[t.item(i,j).text() for j in range(t.columnCount())] \
+        marks = [[self.get_item_marks(i, j) for j in range(t.columnCount())] \
                 for i in range(t.rowCount()-1)]
         return marks
+
+    def get_item_marks(self, i, j):
+        try:
+            return self.tableWidget.item(i, j).text()
+        except:
+            return 'ERROR_INVALID_VALUE'
 
     def __toggle_label_mode(self, label):
         if label not in self.labels_state:
